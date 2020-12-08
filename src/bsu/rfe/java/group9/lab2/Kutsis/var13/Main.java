@@ -1,10 +1,5 @@
 package bsu.rfe.java.group9.lab2.Kutsis.var13;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
@@ -22,30 +17,41 @@ import javax.swing.JTextField;
 
     public class Main extends JFrame {
         // Размеры окна приложения в виде констант
-        private static final int WIDTH = 400;
-        private static final int HEIGHT = 320;
+        private static final int WIDTH = 560;
+        private static final int HEIGHT = 440;
         // Текстовые поля для считывания значений переменных,
 // как компоненты, совместно используемые в различных методах
         private JTextField textFieldX;
         private JTextField textFieldY;
+        private JTextField textFieldZ;
         // Текстовое поле для отображения результата,
 // как компонент, совместно используемый в различных методах
         private JTextField textFieldResult;
         // Группа радио-кнопок для обеспечения уникальности выделения в группе
         private ButtonGroup radioButtons = new ButtonGroup();
+        private ButtonGroup radioMemButtons = new ButtonGroup();
+
         // Контейнер для отображения радио-кнопок
         private Box hboxFormulaType = Box.createHorizontalBox();
+        private Box hboxMemoryidType=Box.createHorizontalBox();
         private int formulaId = 1;
+        private int Memoryid=0;
         private JButton imagePane;
 
+        private Double mem1=0.0;
+        private Double mem2=0.0;
+        private Double mem3=0.0;
+
+
+
         // Формула №1 для рассчѐта
-        public Double calculate1(Double x, Double y) {
-            return x * x + y * y;
+        public Double calculate1(Double x, Double y,Double z) {
+            return x * x + y * y+z;
         }
 
         // Формула №2 для рассчѐта
-        public Double calculate2(Double x, Double y) {
-            return x * x * x + 1 / y;
+        public Double calculate2(Double x, Double y,Double z) {
+            return x * x * x + 1 / y+z;
         }
 
         // Вспомогательный метод для добавления кнопок на панель
@@ -59,6 +65,16 @@ import javax.swing.JTextField;
             });
             radioButtons.add(button);
             hboxFormulaType.add(button);
+        } private void addMemoryRadioButton(String buttonName, final int Memoryid) {
+            JRadioButton button = new JRadioButton(buttonName);
+            button.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ev) {
+                    Main.this.Memoryid = Memoryid;
+                    imagePane.updateUI();
+                }
+            });
+            radioMemButtons.add(button);
+            hboxMemoryidType.add(button);
         }
 
         // Конструктор класса
@@ -72,18 +88,24 @@ import javax.swing.JTextField;
             hboxFormulaType.add(Box.createHorizontalGlue());
             addRadioButton("Формула 1", 1);
             addRadioButton("Формула 2", 2);
+            addMemoryRadioButton("Переменная 1",1);
+            addMemoryRadioButton("Переменная 2",2);
+            addMemoryRadioButton("Переменная 3",3);
             radioButtons.setSelected(
                     radioButtons.getElements().nextElement().getModel(), true);
             hboxFormulaType.add(Box.createHorizontalGlue());
             hboxFormulaType.setBorder(
-                    BorderFactory.createLineBorder(Color.YELLOW));
-// Создать область с полями ввода для X и Y
+                    BorderFactory.createLineBorder(Color.RED));
+// Создать область с полями ввода для X и Y и+- Z
             JLabel labelForX = new JLabel("X:");
-            textFieldX = new JTextField("0", 10);
+            textFieldX = new JTextField("0", 5);
             textFieldX.setMaximumSize(textFieldX.getPreferredSize());
             JLabel labelForY = new JLabel("Y:");
-            textFieldY = new JTextField("0", 10);
+            textFieldY = new JTextField("0", 5);
             textFieldY.setMaximumSize(textFieldY.getPreferredSize());
+            JLabel labelForZ = new JLabel("Z:");
+            textFieldZ = new JTextField("0", 5);
+            textFieldZ.setMaximumSize(textFieldZ.getPreferredSize());
             Box hboxVariables = Box.createHorizontalBox();
             hboxVariables.setBorder(
                     BorderFactory.createLineBorder(Color.RED));
@@ -91,12 +113,16 @@ import javax.swing.JTextField;
             hboxVariables.add(labelForX);
             hboxVariables.add(Box.createHorizontalStrut(10));
             hboxVariables.add(textFieldX);
-            hboxVariables.add(Box.createHorizontalStrut(100));
+            hboxVariables.add(Box.createHorizontalStrut(75));
             hboxVariables.add(labelForY);
             hboxVariables.add(Box.createHorizontalStrut(10));
             hboxVariables.add(textFieldY);
             hboxVariables.add(Box.createHorizontalGlue());
-// Создать область для вывода результата
+            hboxVariables.add(labelForZ);
+            hboxVariables.add(Box.createHorizontalStrut(10));
+            hboxVariables.add(textFieldZ);
+            hboxVariables.add(Box.createHorizontalGlue());
+// Создать область для вывода результат
             JLabel labelForResult = new JLabel("Результат:");
 //labelResult = new JLabel("0");
             textFieldResult = new JTextField("0", 10);
@@ -108,7 +134,7 @@ import javax.swing.JTextField;
             hboxResult.add(Box.createHorizontalStrut(10));
             hboxResult.add(textFieldResult);
             hboxResult.add(Box.createHorizontalGlue());
-            hboxResult.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+            hboxResult.setBorder(BorderFactory.createLineBorder(Color.RED));
 // Создать область для кнопок
             JButton buttonCalc = new JButton("Вычислить");
             buttonCalc.addActionListener(new ActionListener() {
@@ -117,11 +143,13 @@ import javax.swing.JTextField;
                     {
                         Double x = Double.parseDouble(textFieldX.getText());
                         Double y = Double.parseDouble(textFieldY.getText());
+                        Double z = Double.parseDouble(textFieldZ.getText());
+
                         Double result;
                         if (formulaId == 1)
-                            result = calculate1(x, y);
+                            result = calculate1(x, y ,z);
                         else
-                            result = calculate2(x, y);
+                            result = calculate2(x, y ,z);
                         textFieldResult.setText(result.toString());
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(Main.this,
@@ -145,11 +173,12 @@ import javax.swing.JTextField;
             hboxButtons.add(buttonReset);
             hboxButtons.add(Box.createHorizontalGlue());
             hboxButtons.setBorder(
-                    BorderFactory.createLineBorder(Color.GREEN));
+                    BorderFactory.createLineBorder(Color.RED));
 // Связать области воедино в компоновке BoxLayout
             Box contentBox = Box.createVerticalBox();
             contentBox.add(Box.createVerticalGlue());
             contentBox.add(hboxFormulaType);
+            contentBox.add(hboxMemoryidType);
             contentBox.add(hboxVariables);
             contentBox.add(hboxResult);
             contentBox.add(hboxButtons);
