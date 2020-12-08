@@ -2,23 +2,24 @@ package bsu.rfe.java.group9.lab2.Kutsis.var13;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.lang.*;
+
+import static java.lang.Math.*;
+import static java.lang.StrictMath.log;
 
     @SuppressWarnings("serial")
 
     public class Main extends JFrame {
         // Размеры окна приложения в виде констант
-        private static final int WIDTH = 560;
-        private static final int HEIGHT = 440;
+        private static final int WIDTH = 800;
+        private static final int HEIGHT = 600;
+        private JPanel formulaPicturePanel;
+        private ImageIcon image;
         // Текстовые поля для считывания значений переменных,
 // как компоненты, совместно используемые в различных методах
         private JTextField textFieldX;
@@ -37,9 +38,12 @@ import javax.swing.JTextField;
         private Box hboxFormulaType = Box.createHorizontalBox();
         private Box hboxMemoryidType=Box.createHorizontalBox();
         private Box hboxMemoryButtons=Box.createHorizontalBox();
+        private Box hboxFormulaPic = Box.createHorizontalBox();
         private int formulaId = 1;
-        private int Memoryid=0;
+        private int Memoryid=1;
         private JButton imagePane;
+        private JLabel formulaPicture;
+
 
         private Double mem1=0.0;
         private Double mem2=0.0;
@@ -49,12 +53,13 @@ import javax.swing.JTextField;
 
         // Формула №1 для рассчѐта
         public Double calculate1(Double x, Double y,Double z) {
-            return x * x + y * y+z;
+            return (pow(log(pow((1+x), 2) + cos(PI+pow(z, 3))), (sin(y)))+pow((exp(pow(x, 2))+cos(exp(z)) + sqrt(1/y)), 1/x));
+
         }
 
         // Формула №2 для рассчѐта
         public Double calculate2(Double x, Double y,Double z) {
-            return x * x * x + 1 / y+z;
+            return pow(cos(PI+pow(x, 3))+log(pow((1+y), 2)), 1/4)*(exp(pow(z, 2)) + sqrt(1/x)+cos(exp(y)));
         }
 
         // Вспомогательный метод для добавления кнопок на панель
@@ -63,12 +68,36 @@ import javax.swing.JTextField;
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ev) {
                     Main.this.formulaId = formulaId;
-                    imagePane.updateUI();
+                    if(formulaId == 1)
+                    {
+                        BufferedImage img = null;
+                        try {
+                            img = ImageIO.read (getClass().getResource("FormulaOne.bmp"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        ImageIcon image1 = new ImageIcon(img);
+                        formulaPicture.setIcon(image1);
+                    }
+                    if(formulaId == 2)
+                    {
+                        BufferedImage img = null;
+                        try {
+                            img = ImageIO.read (getClass().getResource("FormulaTwo.bmp"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        ImageIcon image1 = new ImageIcon(img);
+                        formulaPicture.setIcon(image1);
+                    }
+
                 }
             });
             radioButtons.add(button);
             hboxFormulaType.add(button);
-        } private void addMemoryRadioButton(String buttonName, final int Memoryid) {
+        }
+
+         private void addMemoryRadioButton(String buttonName, final int Memoryid) {
             JRadioButton button = new JRadioButton(buttonName);
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ev) {
@@ -85,7 +114,7 @@ import javax.swing.JTextField;
                         textFieldMemory.setText(Double.toString(mem3));
                     }
 
-                    imagePane.updateUI();
+
                 }
             });
             radioMemButtons.add(button);
@@ -106,8 +135,23 @@ import javax.swing.JTextField;
             addMemoryRadioButton("Переменная 1",1);
             addMemoryRadioButton("Переменная 2",2);
             addMemoryRadioButton("Переменная 3",3);
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read (getClass().getResource("FormulaOne.bmp"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ImageIcon image1 = new ImageIcon(img);
+            formulaPicture = new JLabel();
+            formulaPicture.setIcon(image1);
+            formulaPicturePanel = new JPanel();
+            formulaPicturePanel.add(formulaPicture);
+            formulaPicturePanel.setMaximumSize(new Dimension(700, 100));
+            hboxFormulaPic.add(formulaPicturePanel); // adding element with picture
             radioButtons.setSelected(
                     radioButtons.getElements().nextElement().getModel(), true);
+            radioMemButtons.setSelected(
+                    radioMemButtons.getElements().nextElement().getModel(), true);
             hboxFormulaType.add(Box.createHorizontalGlue());
             hboxFormulaType.setBorder(
                     BorderFactory.createLineBorder(Color.RED));
@@ -128,11 +172,11 @@ import javax.swing.JTextField;
             hboxVariables.add(labelForX);
             hboxVariables.add(Box.createHorizontalStrut(10));
             hboxVariables.add(textFieldX);
-            hboxVariables.add(Box.createHorizontalStrut(75));
+            hboxVariables.add(Box.createHorizontalStrut(50));
             hboxVariables.add(labelForY);
             hboxVariables.add(Box.createHorizontalStrut(10));
             hboxVariables.add(textFieldY);
-            hboxVariables.add(Box.createHorizontalGlue());
+            hboxVariables.add(Box.createHorizontalStrut(50));
             hboxVariables.add(labelForZ);
             hboxVariables.add(Box.createHorizontalStrut(10));
             hboxVariables.add(textFieldZ);
@@ -244,6 +288,7 @@ import javax.swing.JTextField;
             hboxMemoryField.add(textFieldMemory);
             Box contentBox = Box.createVerticalBox();
             contentBox.add(Box.createVerticalGlue());
+            contentBox.add(hboxFormulaPic);
             contentBox.add(hboxFormulaType);
             contentBox.add(hboxMemoryidType);
             contentBox.add(hboxVariables);
