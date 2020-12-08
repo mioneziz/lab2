@@ -27,13 +27,16 @@ import javax.swing.JTextField;
         // Текстовое поле для отображения результата,
 // как компонент, совместно используемый в различных методах
         private JTextField textFieldResult;
+        private JTextField textFieldMemory;
         // Группа радио-кнопок для обеспечения уникальности выделения в группе
         private ButtonGroup radioButtons = new ButtonGroup();
         private ButtonGroup radioMemButtons = new ButtonGroup();
 
         // Контейнер для отображения радио-кнопок
+        private Box hboxMemoryField = Box.createHorizontalBox();
         private Box hboxFormulaType = Box.createHorizontalBox();
         private Box hboxMemoryidType=Box.createHorizontalBox();
+        private Box hboxMemoryButtons=Box.createHorizontalBox();
         private int formulaId = 1;
         private int Memoryid=0;
         private JButton imagePane;
@@ -70,6 +73,18 @@ import javax.swing.JTextField;
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ev) {
                     Main.this.Memoryid = Memoryid;
+                    if(Memoryid == 1) {
+                        textFieldMemory.setText(Double.toString(mem1));
+                    }
+                    if(Memoryid == 2)
+                    {
+                        textFieldMemory.setText(Double.toString(mem2));
+                    }
+                    if(Memoryid == 3)
+                    {
+                        textFieldMemory.setText(Double.toString(mem3));
+                    }
+
                     imagePane.updateUI();
                 }
             });
@@ -96,7 +111,7 @@ import javax.swing.JTextField;
             hboxFormulaType.add(Box.createHorizontalGlue());
             hboxFormulaType.setBorder(
                     BorderFactory.createLineBorder(Color.RED));
-// Создать область с полями ввода для X и Y и+- Z
+// Создать область с полями ввода для X и Y и Z
             JLabel labelForX = new JLabel("X:");
             textFieldX = new JTextField("0", 5);
             textFieldX.setMaximumSize(textFieldX.getPreferredSize());
@@ -125,6 +140,9 @@ import javax.swing.JTextField;
 // Создать область для вывода результат
             JLabel labelForResult = new JLabel("Результат:");
 //labelResult = new JLabel("0");
+            textFieldMemory =new JTextField("0",10);
+            textFieldMemory.setMaximumSize(
+                    textFieldMemory.getPreferredSize());
             textFieldResult = new JTextField("0", 10);
             textFieldResult.setMaximumSize(
                     textFieldResult.getPreferredSize());
@@ -158,12 +176,56 @@ import javax.swing.JTextField;
                     }
                 }
             });
+            JButton Memoryplus = new JButton("M+");
+            Memoryplus.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ev)
+                {
+                    if(Memoryid==1)
+                    {
+                        mem1+=Double.parseDouble(textFieldResult.getText());
+                        textFieldMemory.setText(String.valueOf(mem1));
+                    }
+                    if(Memoryid==2)
+                    {
+                        mem2+=Double.parseDouble(textFieldResult.getText());
+                        textFieldMemory.setText(String.valueOf(mem2));
+                    }
+                    if(Memoryid==3)
+                    {
+                        mem3+=Double.parseDouble(textFieldResult.getText());
+                        textFieldMemory.setText(String.valueOf(mem3));
+                    }
+                }
+            });
+            JButton Memoryclear = new JButton("MC");
+            Memoryclear.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ev)
+                {
+                    if(Memoryid==1)
+                    {
+                        mem1=0.0;
+                        textFieldMemory.setText(String.valueOf(mem1));
+                    }
+                    if(Memoryid==2)
+                    {
+                        mem2=0.0;
+                        textFieldMemory.setText(String.valueOf(mem2));
+                    }
+                    if(Memoryid==3)
+                    {
+                        mem3=0.0;
+                        textFieldMemory.setText(String.valueOf(mem3));
+                    }
+                }
+            });
+
             JButton buttonReset = new JButton("Очистить поля");
             buttonReset.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ev) {
                     textFieldX.setText("0");
                     textFieldY.setText("0");
                     textFieldResult.setText("0");
+                    textFieldMemory.setText("0");
                 }
             });
             Box hboxButtons = Box.createHorizontalBox();
@@ -175,6 +237,11 @@ import javax.swing.JTextField;
             hboxButtons.setBorder(
                     BorderFactory.createLineBorder(Color.RED));
 // Связать области воедино в компоновке BoxLayout
+            hboxMemoryButtons.add(Memoryplus);
+            hboxButtons.add(Box.createHorizontalStrut(10));
+            hboxMemoryButtons.add(Memoryclear);
+            hboxMemoryField.add(Box.createVerticalGlue());
+            hboxMemoryField.add(textFieldMemory);
             Box contentBox = Box.createVerticalBox();
             contentBox.add(Box.createVerticalGlue());
             contentBox.add(hboxFormulaType);
@@ -182,6 +249,8 @@ import javax.swing.JTextField;
             contentBox.add(hboxVariables);
             contentBox.add(hboxResult);
             contentBox.add(hboxButtons);
+            contentBox.add(hboxMemoryButtons);
+            contentBox.add(hboxMemoryField);
             contentBox.add(Box.createVerticalGlue());
             getContentPane().add(contentBox, BorderLayout.CENTER);
         }
