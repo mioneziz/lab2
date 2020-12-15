@@ -196,7 +196,7 @@ import static java.lang.StrictMath.log;
             hboxResult.add(Box.createHorizontalStrut(10));
             hboxResult.add(textFieldResult);
             hboxResult.add(Box.createHorizontalGlue());
-            hboxResult.setBorder(BorderFactory.createLineBorder(Color.RED));
+            hboxResult.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 // Создать область для кнопок
             JButton buttonCalc = new JButton("Вычислить");
             buttonCalc.addActionListener(new ActionListener() {
